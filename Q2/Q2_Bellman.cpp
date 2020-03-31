@@ -12,7 +12,7 @@ using namespace std;
 struct edges{
     int  u;
     int  v;
-    int     w;
+    int  w;
 };
 
 
