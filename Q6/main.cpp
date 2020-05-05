@@ -1,233 +1,235 @@
 #include <bits/stdc++.h>
-#include "DisjointSet.cpp"
+#include "DisjointSet.h"
 
 using namespace std;
 
 class Maze {
+private:
+
     vector<vector<int> >grid;
     int row, col, nCells;
     DSet cells;
 
 public:
 
+    int  getDirection(int x,
+                      int y);
+    void makeMaze();
+
+    void printMaze();
+
     Maze(int n, int m) : row(n), col(m), nCells(n * m), cells(n * m) {
         cout << "started" << endl;
 
         int cellID = 1;
         cout << row << " " << col << endl;
+        grid.resize(row, vector<int>(col, 0));
 
         for (int i = 0; i < row; i++) {
-            vector<int> t;
-            cout << "fsf" << endl;
-
             for (int j = 0; j < col; j++) {
-                t.push_back(j);
+                grid[i][j] = cellID;
                 cellID++;
+                cout << grid[i][j] << " ";
             }
-
-            for (auto& elem: t) {
-                cout << elem << " ";
-            } cout << endl;
-
-            grid.push_back(t);
-            cout << "size: " << grid.size() << endl;
-        }
-        cout << "finished" << endl;
-        makeMaze();
-    }
-
-    int getDirection(int nRow, int nCol) {
-        // N=1 S=2 E=3 W=4
-        nCol--;
-        nRow--;
-        int e;
-        int NSEW[4] = { 1, 2, 3, 4 };
-
-        int SEW[3] = { 2, 3, 4 };
-        int NEW[3] = { 1, 3, 4 };
-        int NSW[3] = { 1, 2, 4 };
-        int NSE[3] = { 1, 2, 3 };
-
-        int SE[2] = { 2, 3 };
-        int NE[2] = { 1, 3 };
-        int SW[2] = { 2, 4 };
-        int NW[2] = { 1, 4 };
-
-        // if chosen cell isnt on a boarder use full list of direction
-        if ((row > 0) && (row != nRow) && (col > 0) && (col != nCol)) {
-            e = rand() % 4;
-            return NSEW[e];
-        }
-
-        // if chosen cell is in North East corner only make South West available
-        if ((row == 0) && (col == nCol)) {
-            // don't consider West or North
-            e = rand() % 2;
-
-            // cout << "Go South(i+1) or west(j-1) " << SW[e] << " N=1 S=2 E=3 W=4" << endl;
-            return SW[e];
-        }
-
-        // if chosen cell is in South West corner only make North East available
-        if ((row == nRow) && (col == 0)) {
-            // don't consider South or East
-            e = rand() % 2;
-
-            // cout << "Go North(i-1) or East(j+1) " << NE[e] << " N=1 S=2 E=3 W=4" << endl;
-            return NE[e];
-        }
-
-        // if chosen cell is in North West corner only make South East available
-        if ((row == 0) && (col == 0)) {
-            // don't consider West or South
-            e = rand() % 2;
-
-            // cout << "Go South(i+1) or east(j+1) " << SE[e] << " N=1 S=2 E=3 W=4" << endl;
-            return SE[e];
-        }
-
-        // if chosen cell is in South East corner only make North West available
-        if ((row == nRow) && (col == nCol)) {
-            e = rand() % 2;
-
-            return NW[e];
-        }
-
-        if (row == 0) {
-            e = rand() % 3;
-            return SEW[e];
-        }
-
-        if (row == nRow) {
-            e = rand() % 3;
-
-            return NEW[e];
-        }
-
-        if (col == 0) {
-            e = rand() % 3 + 1;
-
-            return NSE[e];
-        }
-
-        if (col == nCol) {
-            e = rand() % 3 + 1;
-
-            return NSW[e];
-        }
-    }
-
-    void makeMaze() {
-        int start, finish, n;
-
-        start = grid[0][0];
-        cout << "starting at: " << start << endl;
-        finish = grid[row - 1][col - 1];
-        cout << "finishing at: " << finish << endl;
-        int cx, cy;
-        int rCol, rRow;
-        srand((unsigned)time(NULL));
-
-        // while goal is not reachable
-        while (cells.find(start) != cells.find(finish)) {
-            int d;
-
-            rCol = rand() % col;
-            rRow = rand() % row;
-
-            // get values
-            cx = grid[rRow][rCol];
-
-            // N=1 S=2 E=3 W=4
-            d = getDirection(rRow, rCol);
-
-            switch (d) {
-            case 1:
-                cy = grid[rRow - 1][rCol]; // North
-                // cout << "second node " << cy  << " i, j " << rRow + 1 << "," << rCol << endl;
-                // cout << "lookups cx and cy" << cx << " " << cy << endl;
-
-                if (cells.find(cx) != cells.find(cy)) {
-                    cells.unionSet(cx, cy);
-                }
-                break;
-
-            case 2:
-                cy = grid[rRow + 1][rCol]; // South
-                // cout << "second node " << cy  << " i, j " << rRow - 1 << "," << rCol << endl;
-                // cout << "lookups cx and cy" << cx << " " << cy << endl;
-
-                if (cells.find(cx) != cells.find(cy)) {
-                    cells.unionSet(cx, cy);
-                }
-                break;
-
-            case 3:
-                cy = grid[rRow][rCol + 1]; // East
-
-
-                if (cells.find(cx) != cells.find(cy)) {
-                    cells.unionSet(cx, cy);
-                }
-                break;
-
-            case 4:
-                cy =  grid[rRow][rCol - 1]; // West
-
-                if (cells.find(cx) != cells.find(cy)) {
-                    cells.unionSet(cx, cy);
-                }
-                break;
-
-            default:
-                cout << "broke" << endl;
-            }
-        }
-
-        printMaze();
-    }
-
-    void printMaze() {
-        // top boundary
-        for (int j = 1; j <= col; j++) {
-            cout << " _";
-        } cout << endl;
-
-        // contents
-        for (int i = 0; i < row; i++) {
-            // start left border
-            cout << "|";
-
-            for (int j = 0; j < col; j++) {
-                // row print
-                if (i != row - 1) {
-                    if (cells.find(grid[i][j]) != cells.find(grid[i + 1][j])) {
-                        cout << "_";
-                    } else {
-                        cout << " ";
-                    }
-                } else {
-                    cout << "_";
-                }
-
-                // Find a way if both are unions print " "
-                // if col print
-                if (j != col - 1) {
-                    if (cells.find(grid[i][j]) != cells.find(grid[i][j + 1])) {
-                        cout << "|";
-                    } else {
-                        cout << " ";
-                    }
-                } else {
-                    // cout << "|";
-                }
-            }
-            cout << "|";
             cout << endl;
         }
+
+        cout << "finished" << endl;
+
+        makeMaze();
     }
 };
 
+void Maze::makeMaze() {
+    int start, finish, n;
+
+    start = grid[0][0];
+    cout << "starting at: " << start << endl;
+    finish = grid[row - 1][col - 1];
+    cout << "finishing at: " << finish << endl;
+    int cx, cy;
+    int rCol, rRow;
+    srand((unsigned)time(NULL));
+
+    // while goal is not reachable
+    while (cells.find(start) != cells.find(finish)) {
+        int d;
+
+        rCol = rand() % col;
+        rRow = rand() % row;
+
+        // get values
+        cx = grid[rRow][rCol];
+
+        // N=1 S=2 E=3 W=4
+        d = getDirection(rRow, rCol);
+
+        switch (d) {
+        case 1:
+            cy = grid[rRow - 1][rCol]; // North
+            // cout << "second node " << cy  << " i, j " << rRow + 1 << "," << rCol << endl;
+            // cout << "lookups cx and cy" << cx << " " << cy << endl;
+
+            if (cells.find(cx) != cells.find(cy)) {
+                cells.unionSet(cx, cy);
+            }
+            break;
+
+        case 2:
+            cy = grid[rRow + 1][rCol]; // South
+            // cout << "second node " << cy  << " i, j " << rRow - 1 << "," << rCol << endl;
+            // cout << "lookups cx and cy" << cx << " " << cy << endl;
+
+            if (cells.find(cx) != cells.find(cy)) {
+                cells.unionSet(cx, cy);
+            }
+            break;
+
+        case 3:
+            cy = grid[rRow][rCol + 1]; // East
+
+
+            if (cells.find(cx) != cells.find(cy)) {
+                cells.unionSet(cx, cy);
+            }
+            break;
+
+        case 4:
+            cy =  grid[rRow][rCol - 1]; // West
+
+            if (cells.find(cx) != cells.find(cy)) {
+                cells.unionSet(cx, cy);
+            }
+            break;
+
+        default:
+            cout << "broke" << endl;
+        }
+    }
+
+    printMaze();
+}
+
+int Maze::getDirection(int nRow, int nCol) {
+    // N=1 S=2 E=3 W=4
+    nCol--;
+    nRow--;
+    int e;
+    int NSEW[4] = { 1, 2, 3, 4 };
+
+    int SEW[3] = { 2, 3, 4 };
+    int NEW[3] = { 1, 3, 4 };
+    int NSW[3] = { 1, 2, 4 };
+    int NSE[3] = { 1, 2, 3 };
+
+    int SE[2] = { 2, 3 };
+    int NE[2] = { 1, 3 };
+    int SW[2] = { 2, 4 };
+    int NW[2] = { 1, 4 };
+
+    // if chosen cell isnt on a boarder use full list of direction
+    if ((row > 0) && (row != nRow) && (col > 0) && (col != nCol)) {
+        e = rand() % 4;
+        return NSEW[e];
+    }
+
+    // if chosen cell is in North East corner only make South West available
+    if ((row == 0) && (col == nCol)) {
+        // don't consider West or North
+        e = rand() % 2;
+
+        // cout << "Go South(i+1) or west(j-1) " << SW[e] << " N=1 S=2 E=3 W=4" << endl;
+        return SW[e];
+    }
+
+    // if chosen cell is in South West corner only make North East available
+    if ((row == nRow) && (col == 0)) {
+        // don't consider South or East
+        e = rand() % 2;
+
+        // cout << "Go North(i-1) or East(j+1) " << NE[e] << " N=1 S=2 E=3 W=4" << endl;
+        return NE[e];
+    }
+
+    // if chosen cell is in North West corner only make South East available
+    if ((row == 0) && (col == 0)) {
+        // don't consider West or South
+        e = rand() % 2;
+
+        // cout << "Go South(i+1) or east(j+1) " << SE[e] << " N=1 S=2 E=3 W=4" << endl;
+        return SE[e];
+    }
+
+    // if chosen cell is in South East corner only make North West available
+    if ((row == nRow) && (col == nCol)) {
+        e = rand() % 2;
+
+        return NW[e];
+    }
+
+    if (row == 0) {
+        e = rand() % 3;
+        return SEW[e];
+    }
+
+    if (row == nRow) {
+        e = rand() % 3;
+
+        return NEW[e];
+    }
+
+    if (col == 0) {
+        e = rand() % 3 + 1;
+
+        return NSE[e];
+    }
+
+    if (col == nCol) {
+        e = rand() % 3 + 1;
+
+        return NSW[e];
+    }
+}
+
+void Maze::printMaze() {
+    // top boundary
+    for (int j = 1; j <= col; j++) {
+        cout << " _";
+    } cout << endl;
+
+    // contents
+    for (int i = 0; i < row; i++) {
+        // start left border
+        cout << "|";
+
+        for (int j = 0; j < col; j++) {
+            // row print
+            if (i != row - 1) {
+                if (cells.find(grid[i][j]) != cells.find(grid[i + 1][j])) {
+                    cout << "_";
+                } else {
+                    cout << " ";
+                }
+            } else {
+                cout << "_";
+            }
+
+            // Find a way if both are unions print " "
+            // if col print
+            if (j != col - 1) {
+                if (cells.find(grid[i][j]) != cells.find(grid[i][j + 1])) {
+                    cout << "|";
+                } else {
+                    cout << " ";
+                }
+            } else {
+                // cout << "|";
+            }
+        }
+        cout << "|";
+        cout << endl;
+    }
+}
 
 int main() {
     // init object
