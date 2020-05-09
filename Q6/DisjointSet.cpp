@@ -15,35 +15,31 @@ void DSet::makeSet() {
     }
 }
 
-int DSet::find(int x) {
+int DSet::find(int e) {
     // rescursive find
-    if (x != parent[x]) {
+    if (e != parent[e]) {
         // set parent to parent (path compression)
-        parent[x] = find(parent[x]);
-
-        // return find(parent[x]);
+        parent[e] = find(parent[e]);
     }
-    return parent[x];
+    return parent[e];
 }
 
 void DSet::unionSet(int e1, int e2) {
-    int x = find(e1);
-    int y = find(e2);
+    int p1 = find(e1);
+    int p2 = find(e2);
 
-    if (x == y) {
+    if (p1 == p2) {
         return;
     }
 
     // optimzation using rank
-    if (rank[x] > rank[y]) {
-        parent[y] = x;
+    if (rank[p1] > rank[p2]) {
+        parent[p2] = p1;
     } else {
-        parent[x] = y;
+        parent[p1] = p2;
 
-        if (rank[x] == rank[y]) {
-            ++rank[y];
+        if (rank[p1] == rank[p2]) {
+            ++rank[p2];
         }
     }
-
-    // parent[root2] = root1;
 }

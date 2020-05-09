@@ -1,8 +1,7 @@
 
-using namespace std;
 
-#ifndef DSET_H
-# define DSET_H
+#ifndef DISJOINTSET_H
+#define DISJOINTSET_H
 
 class DSet {
 private:
@@ -22,4 +21,4 @@ public:
     void unionSet(int,
                   int);
 };
-#endif // ifndef DSET_H
+#endif // ifndef DISJOINTSET_H
