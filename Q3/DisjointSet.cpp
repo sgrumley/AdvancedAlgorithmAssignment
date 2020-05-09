@@ -4,7 +4,7 @@
 DSet::DSet(int n) {
     rank    = new int[n];
     parent  = new int[n];
-    this->n = n;
+    this->n = n + 1;
 
     makeSet();
 }
@@ -37,13 +37,10 @@ void DSet::unionSet(int e1, int e2) {
     if (rank[p1] > rank[p2]) {
         parent[p2] = p1;
 
-        // rank[p1]  += rank[p2];
-
-        // add contents from "p2" into "p1"
+        // add contents from "p2"
     } else {
         parent[p1] = p2;
 
-        // add contents from "p1" into "p2"
         // represent size
         rank[p2] += rank[p1];
 
@@ -76,9 +73,4 @@ void DSet::printSet(int e) {
     for (int i = 0; i < n; i++) {
         std::cout << rank[i] << " ";
     } std::cout << std::endl;
-
-    // while (parent[e] != root) {
-    //     e = parent[e];
-    //     std::cout << e << " ";
-    // }
 }

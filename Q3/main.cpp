@@ -20,11 +20,11 @@ int main() {
 
     srand((unsigned)time(NULL));
 
-    // for (int i = 0; i < n / 2; i++) {
-    //     e1 = rand() % n + 1;
-    //     e2 = rand() % n + 1;
-    //     graph.unionSet(e1, e2);
-    // }
+    for (int i = 0; i < n / 2; i++) {
+        e1 = rand() % n + 1;
+        e2 = rand() % n + 1;
+        graph.unionSet(e1, e2);
+    }
 
     // graph.unionSet(1,  4);
     // graph.unionSet(4,  5);
