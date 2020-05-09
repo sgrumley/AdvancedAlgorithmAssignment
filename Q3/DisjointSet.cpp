@@ -2,8 +2,8 @@
 #include "DisjointSet.h"
 
 DSet::DSet(int n) {
-    rank    = new int[n];
-    parent  = new int[n];
+    rank    = new int[n + 1];
+    parent  = new int[n + 1];
     this->n = n + 1;
 
     makeSet();
