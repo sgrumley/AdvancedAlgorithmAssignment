@@ -2,16 +2,6 @@
 #include "DisjointSet.h"
 using namespace std;
 
-bool isConnected(int u, int v, DSet& graph) {
-    if (graph.find(u) == graph.find(v)) {
-        return true;
-    }
-    return false;
-}
-
-void listConnected() {
-    // print the connected nodes
-}
 
 int main() {
     int  n = 10;
@@ -35,7 +25,10 @@ int main() {
     graph.unionSet(6, 7);
     graph.unionSet(5, 8);
 
-    graph.unionSet(4, 8);
+    cout << graph.isConnected(5, 7) << endl;
+    graph.listSet(5);
+
+    // graph.unionSet(4, 8);
 
 
     // graph.unionSet( 3, 7);

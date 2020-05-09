@@ -3,7 +3,7 @@
 #ifndef DISJOINTSET_H
 #define DISJOINTSET_H
 
-// #include <bits/stdc++.h>
+ #include <bits/stdc++.h>
 
 class DSet {
 private:
@@ -12,7 +12,7 @@ private:
     int *parent;
     int n;
 
-    // std::unordered_map<int, std::vector<int> >elements;
+    std::unordered_map<int, std::vector<int> >elements;
 
 public:
 
@@ -24,6 +24,14 @@ public:
 
     void unionSet(int,
                   int);
+
+    bool isConnected(int,
+                     int);
+
+    void storeSetValues(int,
+                        int);
+
+    void listSet(int);
 
     void printSet(int);
 };
