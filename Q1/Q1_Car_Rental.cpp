@@ -44,29 +44,17 @@ int minCost(vector<Trip>& trips, vector<int>& src, vector<int>& company,  vector
         int shopUID = trips[i].start;
         int shopVID = trips[i].dest;
 
-
         if (shopUID == 1) {
             // If the starting point of the trip is the starting point of the journey
-            if (bestCostAt[shopVID] == MAX) {
+            if ((bestCostAt[shopVID] == MAX) || (bestCostAt[shopVID] > trips[i].cost)) {
                 // If the destination does not yet have a best cost
                 bestCostAt[shopVID] = trips[i].cost;
                 src[shopVID]        = trips[i].start;
                 company[shopVID]    = trips[i].brand;
-            } else if (bestCostAt[shopVID] > trips[i].cost) {
-                // If the current trips cost is smaller than
-                // the current best cost for the destination ? update best cost
-                bestCostAt[shopVID] = trips[i].cost;
-                src[shopVID]        = trips[i].start;
-                company[shopVID]    = trips[i].brand;
             }
-        }  else if (trips[i].cost + bestCostAt[shopUID] < bestCostAt[shopVID]) {
+        }  else if ((trips[i].cost + bestCostAt[shopUID] < bestCostAt[shopVID]) || (bestCostAt[shopVID] == MAX)) {
             // If the current trips cost + the total cost to the town its leaving from
             // is smaller than the current best cost for the destination ? update best cost
-            bestCostAt[shopVID] = trips[i].cost + bestCostAt[shopUID];
-            src[shopVID]        = trips[i].start;
-            company[shopVID]    = trips[i].brand;
-        } else if (bestCostAt[shopVID] == MAX) {
-            // If there is not yet a best cost to this destination
             bestCostAt[shopVID] = trips[i].cost + bestCostAt[shopUID];
             src[shopVID]        = trips[i].start;
             company[shopVID]    = trips[i].brand;
@@ -75,7 +63,7 @@ int minCost(vector<Trip>& trips, vector<int>& src, vector<int>& company,  vector
 
     for (int i = 2; i < n + 1; i++) {
         cout << " Best Costs: " << bestCostAt[i];
-    }
+    } cout << endl;
 
     return bestCostAt[n];
 }
@@ -138,9 +126,11 @@ int main() {
     sort(trips.begin(), trips.end(), compareDistance);
 
     // Print test data
+    cout << "Test data: " << endl;
+
     for (int i = 0; i < trips.size(); i++) {
         cout << trips[i].brand << " " << trips[i].start << " " << trips[i].dest << " " << trips[i].cost  << endl;
-    }
+    } cout << endl;
 
     int costRes = minCost(trips, src, company, bestCostAt, n);
 
