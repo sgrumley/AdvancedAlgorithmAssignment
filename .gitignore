@@ -1,2 +1,5 @@
 # Block executables
 *.exe
+*.out
+*.vscode
+
