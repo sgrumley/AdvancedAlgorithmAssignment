@@ -1,4 +1,6 @@
+// implementation from geeksforgeeks
 #include <bits/stdc++.h>
+
 using namespace std;
 
 class Van_Emde_Boas {
@@ -92,7 +94,7 @@ void insert(Van_Emde_Boas *helper, int key)
     }
     else {
         if (key < helper->minimum) {
-            // If the key is less than current minimum
+            // If the key is less than the current minimum
             // then swap it with the current minimum
             // because this minimum is actually
             // minimum of one of the internal cluster
@@ -167,4 +169,227 @@ bool isMember(Van_Emde_Boas *helper, int key)
                             helper->low(key));
         }
     }
+}
+
+// Function to find the successor of the given key
+int VEB_successor(Van_Emde_Boas *helper, int key)
+{
+    // Base case: If key is 0 and its successor
+    // is present then return 1 else return null
+    if (helper->universe_size == 2) {
+        if ((key == 0) && (helper->maximum == 1)) {
+            return 1;
+        }
+        else {
+            return -1;
+        }
+    }
+
+    // If key is less then minimum then return minimum
+    // because it will be successor of the key
+    else if ((helper->minimum != -1) && (key < helper->minimum)) {
+        return helper->minimum;
+    }
+    else {
+        // Find successor inside the cluster of the key
+        // First find the maximum in the cluster
+        int max_incluster = VEB_maximum(helper->clusters[helper->high(key)]);
+
+        int offset{ 0 }, succ_cluster{ 0 };
+
+        // If there is any key( maximum!=-1 ) present in the cluster then find
+        // the successor inside of the cluster
+        if ((max_incluster != -1) && (helper->low(key) < max_incluster)) {
+            offset = VEB_successor(helper->clusters[helper->high(key)],
+                                   helper->low(key));
+
+            return helper->generate_index(helper->high(key), offset);
+        }
+
+        // Otherwise look for the next cluster with at least one key present
+        else {
+            succ_cluster = VEB_successor(helper->summary, helper->high(key));
+
+            // If there is no cluster with any key present
+            // in summary then return null
+            if (succ_cluster == -1) {
+                return -1;
+            }
+
+            // Find minimum in successor cluster which will
+            // be the successor of the key
+            else {
+                offset = VEB_minimum(helper->clusters[succ_cluster]);
+
+                return helper->generate_index(succ_cluster, offset);
+            }
+        }
+    }
+}
+
+// Function to find the predecessor of the given key
+int VEB_predecessor(Van_Emde_Boas *helper, int key)
+{
+    // Base case: If the key is 1 and it's predecessor
+    // is present then return 0 else return null
+    if (helper->universe_size == 2) {
+        if ((key == 1) && (helper->minimum == 0)) {
+            return 0;
+        }
+        else return -1;
+    }
+
+    // If the key is greater than maximum of the tree then
+    // return key as it will be the predecessor of the key
+    else if ((helper->maximum != -1) && (key > helper->maximum)) {
+        return helper->maximum;
+    }
+    else {
+        // Find predecessor in the cluster of the key
+        // First find minimum in the key to check whether any key
+        // is present in the cluster
+        int min_incluster = VEB_minimum(helper->clusters[helper->high(key)]);
+
+        int offset{ 0 }, pred_cluster{ 0 };
+
+        // If any key is present in the cluster then find predecessor in
+        // the cluster
+        if ((min_incluster != -1) && (helper->low(key) > min_incluster)) {
+            offset = VEB_predecessor(helper->clusters[helper->high(key)],
+                                     helper->low(key));
+
+            return helper->generate_index(helper->high(key), offset);
+        }
+
+        // Otherwise look for predecessor in the summary which
+        // returns the index of predecessor cluster with any key present
+        else {
+            pred_cluster = VEB_predecessor(helper->summary, helper->high(key));
+
+            // If no predecessor cluster then...
+            if (pred_cluster == -1) {
+                // Special case which is due to lazy propagation
+                if ((helper->minimum != -1) && (key > helper->minimum)) {
+                    return helper->minimum;
+                }
+
+                else return -1;
+            }
+
+            // Otherwise find maximum in the predecessor cluster
+            else {
+                offset = VEB_maximum(helper->clusters[pred_cluster]);
+
+                return helper->generate_index(pred_cluster, offset);
+            }
+        }
+    }
+}
+
+// Function to delete a key from the tree
+// assuming that the key is present
+void VEB_delete(Van_Emde_Boas *helper, int key)
+{
+    // If only one key is present, it means
+    // that it is the key we want to delete
+    // Same condition as key == max && key == min
+    if (helper->maximum == helper->minimum) {
+        helper->minimum = -1;
+        helper->maximum = -1;
+    }
+
+    // Base case: If the above condition is not true
+    // i.e. the tree has more than two keys
+    // and if its size is two than a tree has exactly two keys.
+    // We simply delete it by assigning it to another
+    // present key value
+    else if (helper->universe_size == 2) {
+        if (key == 0) {
+            helper->minimum = 1;
+        }
+        else {
+            helper->minimum = 0;
+        }
+        helper->maximum = helper->minimum;
+    }
+    else {
+        // As we are doing something similar to lazy propagation
+        // we will basically find next bigger key
+        // and assign it as minimum
+        if (key == helper->minimum) {
+            int first_cluster = VEB_minimum(helper->summary);
+
+            key
+                = helper->generate_index(first_cluster,
+                                         VEB_minimum(helper->clusters[first_cluster]));
+
+            helper->minimum = key;
+        }
+
+        // Now we delete the key
+        VEB_delete(helper->clusters[helper->high(key)],
+                   helper->low(key));
+
+        // After deleting the key, rest of the improvements
+
+        // If the minimum in the cluster of the key is -1
+        // then we have to delete it from the summary to
+        // eliminate the key completely
+        if (VEB_minimum(helper->clusters[helper->high(key)]) == -1) {
+            VEB_delete(helper->summary, helper->high(key));
+
+            // After the above condition, if the key
+            // is maximum of the tree then...
+            if (key == helper->maximum) {
+                int max_insummary = VEB_maximum(helper->summary);
+
+                // If the max value of the summary is null
+                // then only one key is present so
+                // assign min. to max.
+                if (max_insummary == -1) {
+                    helper->maximum = helper->minimum;
+                }
+                else {
+                    // Assign global maximum of the tree, after deleting
+                    // our query-key
+                    helper->maximum
+                        = helper->generate_index(max_insummary,
+                                                 VEB_maximum(helper->clusters[max_insummary]));
+                }
+            }
+        }
+
+        // Simply find the new maximum key and
+        // set the maximum of the tree
+        // to the new maximum
+        else if (key == helper->maximum) {
+            helper->maximum
+                = helper->generate_index(helper->high(key),
+                                         VEB_maximum(helper->clusters[helper->high(key)]));
+        }
+    }
+}
+
+int main()
+{
+    Van_Emde_Boas *end = new Van_Emde_Boas(8);
+
+    // Inserting Keys
+    insert(end, 1);
+    insert(end, 0);
+    insert(end, 2);
+    insert(end, 4);
+
+    // Before deletion
+    cout << isMember(end, 2) << endl;
+    cout << VEB_predecessor(end, 4) << " "
+         << VEB_successor(end, 1) << endl;
+
+    // Delete only if the key is present
+    if (isMember(end, 2)) VEB_delete(end, 2);
+
+    // After deletion
+    cout << isMember(end, 2) << endl;
+    cout << VEB_predecessor(end, 4) << " "
+         << VEB_successor(end, 1) << endl;
 }
