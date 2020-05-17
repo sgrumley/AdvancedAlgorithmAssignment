@@ -1,207 +1,99 @@
-#include <bits/stdc++.h>
+#include "minHeap.cpp"
+#include "maxHeap.cpp"
 
-
-using namespace std;
-
-// Data structure for Min Heap
-struct PriorityQueue
-{
+struct DS {
 private:
 
-    // vector to store heap elements
-    vector<int>A;
-
-    // return parent of A[i]
-    // don't call this function if i is already a root node
-    int PARENT(int i)
-    {
-        return (i - 1) / 2;
-    }
-
-    // return left child of A[i]
-    int LEFT(int i)
-    {
-        return 2 * i + 1;
-    }
-
-    // return right child of A[i]
-    int RIGHT(int i)
-    {
-        return 2 * i + 2;
-    }
-
-    // Recursive Heapify-down algorithm
-    // the node at index i and its two direct children
-    // violates the heap property
-    void heapify_down(int i)
-    {
-        // get left and right child of node at index i
-        int left  = LEFT(i);
-        int right = RIGHT(i);
-
-        int smallest = i;
-
-        // compare A[i] with its left and right child
-        // and find smallest value
-        if ((left < size()) && (A[left] < A[i])) smallest = left;
-
-        if ((right < size()) && (A[right] < A[smallest])) smallest = right;
-
-        // swap with child having lesser value and
-        // call heapify-down on the child
-        if (smallest != i) {
-            swap(A[i], A[smallest]);
-            heapify_down(smallest);
-        }
-    }
-
-    // Recursive Heapify-up algorithm
-    void heapify_up(int i)
-    {
-        // check if node at index i and its parent violates
-        // the heap property
-        if (i && (A[PARENT(i)] > A[i]))
-        {
-            // swap the two if heap property is violated
-            swap(A[i], A[PARENT(i)]);
-
-            // call Heapify-up on the parent
-            heapify_up(PARENT(i));
-        }
-    }
+    PriorityQueueMin pArr;
+    PriorityQueueMax pkArr;
+    int              pkMax = 5;
+    int              k;
 
 public:
 
-    // return size of the heap
-    unsigned int size()
-    {
-        return A.size();
+    DS(int k) {
+        this->k = k;
     }
 
-    // function to check if heap is empty or not
-    bool empty()
-    {
-        return size() == 0;
-    }
+    void insertd(int val) {
+        // if (pkArr.size() >= k) {
+        //     pkArr.push(val);
+        // }
 
-    // insert key into the heap
-    void push(int key)
-    {
-        // insert the new element to the end of the vector
-        A.push_back(key);
-
-        // get element index and call heapify-up procedure
-        int index = size() - 1;
-        heapify_up(index);
-    }
-
-    // function to remove element with lowest priority (present at root)
-    void pop()
-    {
-        try {
-            // if heap has no elements, throw an exception
-            if (size() == 0) throw out_of_range("Vector<X>::at() : "
-                                                "index is out of range(Heap underflow)");
-
-            // replace the root of the heap with the last element
-            // of the vector
-            A[0] = A.back();
-            A.pop_back();
-
-            // call heapify-down on root node
-            heapify_down(0);
-        }
-
-        // catch and print the exception
-        catch (const out_of_range& oor) {
-            cout << "\n" << oor.what();
+        if ((val < pkMax) || (pkArr.size() <= k)) {
+            if (pkArr.size() > k) {
+                int tmp = pkArr.top();
+                pkArr.pop();
+                pArr.push(tmp);
+            }
+            pkArr.push(val);
+            pkMax = pkArr.top();
+        } else {
+            pArr.push(val);
         }
     }
 
-    // function to return element with lowest priority (present at root)
-    int top()
-    {
-        try {
-            // if heap has no elements, throw an exception
-            if (size() == 0) throw out_of_range("Vector<X>::at() : "
-                                                "index is out of range(Heap underflow)");
-
-            // else return the top (first) element
-            return A.at(0); // or return A[0];
+    void del(int val) {
+        if (val < pkMax) {
+            pkArr.remove(val);
+            int tmp = pArr.top();
+            pArr.pop();
+            pkArr.push(tmp);
+            pkMax = pkArr.top();
+        } else {
+            pArr.remove(val);
         }
+    }
 
-        // catch and print the exception
-        catch (const out_of_range& oor) {
-            cout << "\n" << oor.what();
-        }
+    void printK() {
+        cout << k << " smallest values: " << endl;
+        cout << "------------------------------------------" << endl;
+        pkArr.printData();
+        cout << endl << endl;
+    }
+
+    void printAll() {
+        cout << "All Data: " << endl;
+        cout << "------------------------------------------" << endl;
+        pkArr.printData();
+        pArr.printData();
+        cout << endl << endl;
     }
 };
+
 
 // Min Heap C++ Implementation
 int main()
 {
     int n = 10;
-    int k = 4;
-    PriorityQueue pq;
-    int arr[n] = { 16, 2, 77, 40, 12071, 73894, 8345, 3, 843, 945 };
-    int smallest[k];
+    int k = 5;
+
+    cout << "K = " << k << endl;
+    DS dataStructure(k);
+
+    dataStructure.insertd(30);
+    dataStructure.insertd(10);
+    dataStructure.insertd(8);
+    dataStructure.insertd(3);
+    dataStructure.insertd(13);
+    dataStructure.insertd(7);
+    dataStructure.insertd(6);
+    dataStructure.insertd(20);
+    dataStructure.insertd(28);
+    dataStructure.insertd(23);
+    dataStructure.insertd(23);
+    dataStructure.insertd(27);
+    dataStructure.insertd(26);
+    dataStructure.insertd(19);
 
 
-    // reading in
-    // turn full array into heap then pop k times into smallest[]
+    dataStructure.printAll();
+    dataStructure.printK();
 
-    // maintain by only deleting from one of the structures // check if its smaller than smallest[k-1]
+    dataStructure.del(8);
+    dataStructure.printAll();
+    dataStructure.printK();
 
-
-    // heap of n
-    // array of k
-    // if deleting from array -> pop from heap into arr[i]
-    // else delete from heap with method below
-
-    // deleting node from heap
-    //  if ( replacement node < its parent node )
-    //     filter the replacement node up the tree
-    //  else
-    //     filter the replacement node down the tree
-
-    // loop through array until k 1's are found
-
-    // Note - Priority is decided by element's value
-
-    pq.push(3);
-    pq.push(2);
-    pq.push(15);
-
-    cout << "Size is " << pq.size() << endl;
-
-    cout << pq.top() << " ";
-    pq.pop();
-
-    cout << pq.top() << " ";
-    pq.pop();
-
-    pq.push(5);
-    pq.push(4);
-    pq.push(45);
-
-    cout << endl << "Size is " << pq.size() << endl;
-
-    cout << pq.top() << " ";
-    pq.pop();
-
-    cout << pq.top() << " ";
-    pq.pop();
-
-    cout << pq.top() << " ";
-    pq.pop();
-
-    cout << pq.top() << " ";
-    pq.pop();
-
-    cout << endl << std::boolalpha << pq.empty();
-
-    pq.top(); // top operation on an empty heap
-    pq.pop(); // pop operation on an empty heap
 
     return 0;
 }

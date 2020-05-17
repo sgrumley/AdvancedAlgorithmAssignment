@@ -376,25 +376,24 @@ int main()
     Van_Emde_Boas *end = new Van_Emde_Boas(n + 1);
 
     // Inserting Keys
+    cout << "N = " << n << endl;
     insert(end, 1);
     insert(end, 0);
     insert(end, 2);
     insert(end, 4);
-    int a = 7;
-    insert(end, a);
 
     // Before deletion
-    cout << isMember(end, 2) << endl;
+    // cout << isMember(end, 2) << endl;
 
-    cout << VEB_predecessor(end, 4) << " "
-         << VEB_successor(end, 1) << endl;
+    // cout << VEB_predecessor(end, 4) << " "
+    //      << VEB_successor(end, 1) << endl;
 
-    // Delete only if the key is present
-    if (isMember(end, 2)) VEB_delete(end, 2);
+    // // Delete only if the key is present
+    // if (isMember(end, 2)) VEB_delete(end, 2);
 
-    cout << isMember(end, 2) << endl;
-    cout << VEB_predecessor(end, 4) << " "
-         << VEB_successor(end, 1) << endl;
+    // cout << isMember(end, 2) << endl;
+    // cout << VEB_predecessor(end, 4) << " "
+    //      << VEB_successor(end, 1) << endl;
 
 
     // Get time for insert
@@ -405,7 +404,7 @@ int main()
     }
     auto stopi     = chrono::high_resolution_clock::now();
     auto durationi = chrono::duration_cast<chrono::microseconds>(stopi - starti);
-    cout << "duration for RB tree insert " << durationi.count() << endl;
+    cout << "duration for vEB tree insert " << durationi.count() <<  "ms" << endl;
 
     // Get time for find
     auto startf = chrono::high_resolution_clock::now();
@@ -415,7 +414,7 @@ int main()
     }
     auto stopf     = chrono::high_resolution_clock::now();
     auto durationf = chrono::duration_cast<chrono::microseconds>(stopf - startf);
-    cout << "duration for RB tree search " << durationf.count() << endl;
+    cout << "duration for vEB tree search " << durationf.count() << "ms" << endl;
 
     // Get time for delete
     auto startd = chrono::high_resolution_clock::now();
@@ -425,7 +424,7 @@ int main()
     }
     auto stopd     = chrono::high_resolution_clock::now();
     auto durationd = chrono::duration_cast<chrono::microseconds>(stopd - startd);
-    cout << "duration for RB tree delete " << durationd.count() << endl;
+    cout << "duration for vEB tree delete " << durationd.count() << "ms" << endl;
 
     // print
     // cout << isMember(end, 2) << endl;
