@@ -9,8 +9,6 @@ private:
     int *index;
     vector<int>data;
 
-    // index = new int[n]{ -1 };
-
 public:
 
     List(int m) : n{m + 1}, index{new int[n]{ -1 }} {
@@ -23,9 +21,9 @@ public:
 
     int operator[](int index) {
         if (index >= n) {
-            cout << "Ya blew it" << endl;
+            cout << "Out of range" << endl;
         } else if (index < 0) {
-            cout << "Ya blew it the other way" << endl;
+            cout << "Out of range" << endl;
         }
         return data.at(index);
     }

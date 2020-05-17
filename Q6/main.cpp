@@ -19,23 +19,16 @@ public:
     void printMaze();
 
     Maze(int n, int m) : row(n), col(m), nCells(n * m), cells(n * m) {
-        cout << "started" << endl;
-
         int cellID = 1;
-        cout << row << " " << col << endl;
+
         grid.resize(row, vector<int>(col, 0));
 
         for (int i = 0; i < row; i++) {
             for (int j = 0; j < col; j++) {
                 grid[i][j] = cellID;
                 cellID++;
-                cout << grid[i][j] << " ";
             }
-            cout << endl;
         }
-
-        cout << "finished" << endl;
-
         makeMaze();
     }
 };
@@ -43,11 +36,9 @@ public:
 void Maze::makeMaze() {
     int start, finish, n;
 
-    start = grid[0][0];
-    cout << "starting at: " << start << endl;
+    start  = grid[0][0];
     finish = grid[row - 1][col - 1];
-    cout << "finishing at: " << finish << endl;
-    
+
     int rCol, rRow;
     srand((unsigned)time(NULL));
 
@@ -64,16 +55,10 @@ void Maze::makeMaze() {
 
         // N=1 S=2 E=3 W=4
         d = getDirection(rRow, rCol);
-        
-        cout << endl << "first  node " << cx  << " i, j " << rRow << "," << rCol << endl;
-        cout << d << "has been return" << endl;
 
         switch (d) {
         case 1:
-            cout << "second node " << cy  << " i, j " << rRow - 1  << "," << rCol << endl;
             cy = grid[rRow - 1][rCol]; // North
-             
-             cout << "lookups cx and cy" << cx << " " << cy << endl;
 
             if (cells.find(cx) != cells.find(cy)) {
                 cells.unionSet(cx, cy);
@@ -81,10 +66,7 @@ void Maze::makeMaze() {
             break;
 
         case 2:
-            cout << "second node " << cy  << " i, j " << rRow + 1 << "," << rCol << endl;
             cy = grid[rRow + 1][rCol]; // South
-            
-             cout << "lookups cx and cy" << cx << " " << cy << endl;
 
             if (cells.find(cx) != cells.find(cy)) {
                 cells.unionSet(cx, cy);
@@ -92,10 +74,7 @@ void Maze::makeMaze() {
             break;
 
         case 3:
-            cout << "second node " << cy  << " i, j " << rRow << "," << rCol+1 << endl;
             cy = grid[rRow][rCol + 1]; // East
-            cout << "lookups cx and cy" << cx << " " << cy << endl;
-
 
             if (cells.find(cx) != cells.find(cy)) {
                 cells.unionSet(cx, cy);
@@ -103,9 +82,7 @@ void Maze::makeMaze() {
             break;
 
         case 4:
-            cout << "second node "   << " i, j " << rRow  << "," << rCol -1<< endl;
             cy =  grid[rRow][rCol - 1]; // West
-            cout << "lookups cx and cy" << cx << " " << cy << endl;
 
             if (cells.find(cx) != cells.find(cy)) {
                 cells.unionSet(cx, cy);
@@ -113,18 +90,19 @@ void Maze::makeMaze() {
             break;
 
         default:
+
             cout << "broke" << endl;
         }
-       
     }
- cout << "works here" << endl;
+
+    // cout << "works here" << endl;
     printMaze();
 }
 
 int Maze::getDirection(int r, int c) {
     // N=1 S=2 E=3 W=4
-    int nCol = col-1;
-    int nRow = row -1;
+    int nCol = col - 1;
+    int nRow = row - 1;
     int e;
     int NSEW[4] = { 1, 2, 3, 4 };
 
@@ -249,8 +227,8 @@ int main() {
     // start = ij
     // finish = ij
 
-    row = 10;
-    col = 10;
+    row = 50;
+    col = 88;
 
     Maze m1(row, col);
 

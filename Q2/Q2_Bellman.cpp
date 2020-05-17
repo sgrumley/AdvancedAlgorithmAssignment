@@ -51,7 +51,7 @@ void bellman(char src, int numE, int numV, const vector<edges>& E) {
     dist[src] = 0;
 
     // for v-1 times
-    for (int i = 0; i < numV - 1; i++) {
+    for (int i = 0; i < numV + 5; i++) {
         // for every edge
         for (int j = 0; j < numE - 1; j++) {
             u = E[j].u;

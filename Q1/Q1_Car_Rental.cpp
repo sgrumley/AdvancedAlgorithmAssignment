@@ -82,6 +82,7 @@ int main() {
 
     vector<int> d;
 
+    /* Comment this section for constant data  */
     for (int i = 0; i < 10; i++) {
         iter.brand = (rand() % 100 + 1);
         iter.cost  = (rand() % 900 + 1);
@@ -104,8 +105,9 @@ int main() {
         trips.push_back(iter);
     }
 
+    /* Comment this section for constant data  */
 
-    // test case
+    // Uncomment this section for constant data - test case
     // iter = { 1, 1, 2, 41 };
     // trips.push_back(iter);
     // iter = { 1, 1, 3, 97 };
