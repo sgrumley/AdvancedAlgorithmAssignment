@@ -372,9 +372,9 @@ void VEB_delete(Van_Emde_Boas *helper, int key)
 
 int main()
 {
-    int n = 5000000;
-    Van_Emde_Boas *end = new Van_Emde_Boas(n+1);
-    
+    int n              = 500000;
+    Van_Emde_Boas *end = new Van_Emde_Boas(n + 1);
+
     // Inserting Keys
     insert(end, 1);
     insert(end, 0);
@@ -389,41 +389,41 @@ int main()
     cout << VEB_predecessor(end, 4) << " "
          << VEB_successor(end, 1) << endl;
 
-    //Delete only if the key is present
+    // Delete only if the key is present
     if (isMember(end, 2)) VEB_delete(end, 2);
 
     cout << isMember(end, 2) << endl;
     cout << VEB_predecessor(end, 4) << " "
          << VEB_successor(end, 1) << endl;
 
-    
 
-
-
-         // Get time for insert
+    // Get time for insert
     auto starti = chrono::high_resolution_clock::now();
+
     for (int i = 1; i < n; i++) {
         insert(end, i);
     }
-    auto stopi = chrono::high_resolution_clock::now();
+    auto stopi     = chrono::high_resolution_clock::now();
     auto durationi = chrono::duration_cast<chrono::microseconds>(stopi - starti);
     cout << "duration for RB tree insert " << durationi.count() << endl;
 
     // Get time for find
     auto startf = chrono::high_resolution_clock::now();
+
     for (int i = 0; i < n; i++) {
-        isMember(end,i);
+        isMember(end, i);
     }
-    auto stopf = chrono::high_resolution_clock::now();
+    auto stopf     = chrono::high_resolution_clock::now();
     auto durationf = chrono::duration_cast<chrono::microseconds>(stopf - startf);
     cout << "duration for RB tree search " << durationf.count() << endl;
 
     // Get time for delete
     auto startd = chrono::high_resolution_clock::now();
+
     for (int i = 0; i < n; i++) {
         VEB_delete(end, i);
     }
-    auto stopd = chrono::high_resolution_clock::now();
+    auto stopd     = chrono::high_resolution_clock::now();
     auto durationd = chrono::duration_cast<chrono::microseconds>(stopd - startd);
     cout << "duration for RB tree delete " << durationd.count() << endl;
 
